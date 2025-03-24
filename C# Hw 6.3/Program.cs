@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace C__Hw_6._3
+﻿namespace C__Hw_6._3
 {
     internal class Program
     {
