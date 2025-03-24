@@ -4,46 +4,84 @@
     {
         static void Main(string[] args)
         {
-            IValidator passwordValidator = new PasswordValidator();
-            IValidator emailValidator = new EmailValidator();
+            IRemoteControl tv = new Television();
+            IRemoteControl radio = new Radio();
 
-            Console.WriteLine("Перевірка пароля 'Test1234': " + passwordValidator.Validate("Test1234"));
-            Console.WriteLine("Перевірка email 'test@example.com': " + emailValidator.Validate("test@example.com"));
-        } 
+            tv.TurnOn();
+            tv.SetChannel(5);
+            tv.TurnOff();
 
-        public interface IValidator
-        {
-            bool Validate(string input);
+            radio.TurnOn();
+            radio.SetChannel(104);
+            radio.TurnOff();
         }
 
-        public class PasswordValidator : IValidator
+        public interface IRemoteControl
         {
-            public bool Validate(string input)
+            void TurnOn();
+            void TurnOff();
+            void SetChannel(int channel);
+        }
+
+        public class Television : IRemoteControl
+        {
+            private bool isOn = false;
+            private int currentChannel = 1;
+
+            public void TurnOn()
             {
-                bool hasUpper = false, hasDigit = false;
-                if (input.Length < 8) return false;
+                isOn = true;
+                Console.WriteLine("Телевізор увімкнено.");
+            }
 
-                foreach (char lol1 in input)
+            public void TurnOff()
+            {
+                isOn = false;
+                Console.WriteLine("Телевізор вимкнено.");
+            }
+
+            public void SetChannel(int channel)
+            {
+                if (isOn)
                 {
-                    if (char.IsUpper(lol1)) hasUpper = true;
-                    if (char.IsDigit(lol1)) hasDigit = true;
+                    currentChannel = channel;
+                    Console.WriteLine($"Перемкнуто на канал {channel}.");
                 }
-
-                return hasUpper && hasDigit;
+                else
+                {
+                    Console.WriteLine("Неможливо змінити канал. Телевізор вимкнено.");
+                }
             }
         }
 
-        public class EmailValidator : IValidator
+        public class Radio : IRemoteControl
         {
-            public bool Validate(string input)
+            private bool isOn = false;
+            private int currentFrequency = 101;
+
+            public void TurnOn()
             {
-                if (string.IsNullOrWhiteSpace(input) || !input.Contains("@")) return false;
+                isOn = true;
+                Console.WriteLine("Радіо увімкнено.");
+            }
 
-                string[] parts = input.Split('@');
-                if (parts.Length != 2 || string.IsNullOrWhiteSpace(parts[0]) || string.IsNullOrWhiteSpace(parts[1]))
-                    return false;
+            public void TurnOff()
+            {
+                isOn = false;
+                Console.WriteLine("Радіо вимкнено.");
+            }
 
-                return parts[1].Contains(".");
+            public void SetChannel(int channel)
+            {
+                if (isOn)
+                {
+                    currentFrequency = channel;
+                    Console.WriteLine($"Перемкнуто на частоту {channel} FM.");
+                }
+                else
+                {
+                    Console.WriteLine("Неможливо змінити частоту. Радіо вимкнено.");
+                }
             }
         }
     }
